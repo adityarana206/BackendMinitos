@@ -1,0 +1,23 @@
+{
+  "name": "minitosbackend",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/adityarana206/BackendMinitos#readme",
+  "bugs": {
+    "url": "https://github.com/adityarana206/BackendMinitos/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adityarana206/BackendMinitos.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "node-modules": "^1.0.1"
+  }
+}
