@@ -23,6 +23,10 @@ const limiter = rateLimit({
 
 app.use("/api/auth", limiter);
 
+app.get('/',(req,res)=>{
+  res.send('You are connected')
+})
+
 // Database connection
 connectDB();
 
