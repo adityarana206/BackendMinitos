@@ -5,36 +5,27 @@ const Ads = require("../models/ads.model");
 
 const createAds = async (req, res) => {
   try {
-    const { adsImage } = req.body;
+    const { adsImage } = req.body; // This should be a base64 image or image URL
 
-    // Validate if image is provided
     if (!adsImage) {
-      return res.status(400).json({
-        message: "Ad image is required",
-      });
+      return res.status(400).json({ message: "Ad image is required" });
     }
 
     // Upload image to Cloudinary
-    const result = await cloudinary.uploader.upload(adsImage, {
-      folder: "AdsMinitos",
+    const uploadResult = await cloudinary.uploader.upload(adsImage, {
+      folder: "ads_images", // Optional: your folder in Cloudinary
     });
 
-    // Create new ad with the Cloudinary URL
+    // Save the Cloudinary image URL to the database
     const newAd = new Ads({
-      adsImage: result.secure_url, // Use the Cloudinary URL, not the original base64
+      adsImage: uploadResult.secure_url,
     });
 
-    // Save to database
     await newAd.save();
 
-    // Send success response
     res.status(201).json({
       message: "Ad uploaded successfully",
       ad: newAd,
-      cloudinaryData: {
-        public_id: result.public_id,
-        url: result.secure_url,
-      },
     });
   } catch (error) {
     console.error("Error in createAds:", error);
@@ -44,7 +35,6 @@ const createAds = async (req, res) => {
     });
   }
 };
-
 // Get all ads
 const getAllAds = async (req, res) => {
   try {

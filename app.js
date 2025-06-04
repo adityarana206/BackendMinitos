@@ -9,7 +9,7 @@ const connectDB = require("./src/config/db");
 const addRoutes = require("./src/routes/ads.route");
 
 const app = express();
-
+require("dotenv").config();
 // Security middleware
 app.use(helmet());
 app.use(cors());
