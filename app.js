@@ -7,7 +7,6 @@ require("dotenv").config();
 const authRoutes = require("./src/routes/auth");
 const connectDB = require("./src/config/db");
 const addRoutes = require("./src/routes/ads.route");
-const { createAds } = require("./src/controllers/add.controller");
 
 const app = express();
 
@@ -25,9 +24,9 @@ const limiter = rateLimit({
 
 app.use("/api/auth", limiter);
 
-app.get('/',(req,res)=>{
-  res.send('You are connected')
-})
+app.get("/", (req, res) => {
+  res.send("You are connected");
+});
 
 app.use("/api/ads", addRoutes);
 // Database connection
@@ -40,5 +39,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-
