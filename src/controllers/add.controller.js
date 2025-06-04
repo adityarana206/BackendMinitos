@@ -1,5 +1,4 @@
-// Import the correct Ad model (not Everyday)
-// Make sure this path is correct
+// Import the correct Ad model
 const { cloudinary } = require("../config/cloudinary");
 const Ads = require("../models/ads.model");
 
@@ -49,7 +48,8 @@ const createAds = async (req, res) => {
 // Get all ads
 const getAllAds = async (req, res) => {
     try {
-        const ads = await Ad.find().sort({ createdAt: -1 });
+        // Fixed: Use Ads instead of Ad
+        const ads = await Ads.find().sort({ createdAt: -1 });
         
         res.status(200).json({
             message: "Ads retrieved successfully",
@@ -66,12 +66,17 @@ const getAllAds = async (req, res) => {
 };
 
 // Get ad by ID
-const getAdsAll = async (req, res) => {
+const getAdById = async (req, res) => {
     try {
-       
-        const ad = await Ad.find();
+        const { id } = req.params;
+        // Fixed: Use Ads and findById with id parameter
+        const ad = await Ads.findById(id);
         
-       
+        if (!ad) {
+            return res.status(404).json({
+                message: "Ad not found"
+            });
+        }
         
         res.status(200).json({
             message: "Ad retrieved successfully",
@@ -97,7 +102,7 @@ const updateAd = async (req, res) => {
         // If new image is provided, upload to Cloudinary
         if (adsImage) {
             // Get the old ad to delete old image from Cloudinary
-            const oldAd = await Ad.findById(id);
+            const oldAd = await Ads.findById(id);
             
             if (oldAd && oldAd.adsImage) {
                 // Extract public_id from the old URL to delete it
@@ -113,7 +118,8 @@ const updateAd = async (req, res) => {
             updateData.adsImage = result.secure_url;
         }
         
-        const updatedAd = await Ad.findByIdAndUpdate(
+        // Fixed: Use Ads instead of Ad
+        const updatedAd = await Ads.findByIdAndUpdate(
             id,
             updateData,
             { new: true, runValidators: true }
@@ -142,7 +148,8 @@ const updateAd = async (req, res) => {
 const deleteAd = async (req, res) => {
     try {
         const { id } = req.params;
-        const ad = await Ad.findById(id);
+        // Fixed: Use Ads instead of Ad
+        const ad = await Ads.findById(id);
         
         if (!ad) {
             return res.status(404).json({
@@ -156,8 +163,8 @@ const deleteAd = async (req, res) => {
             await cloudinary.uploader.destroy(`AdsMinitos/${publicId}`);
         }
         
-        // Delete from database
-        await Ad.findByIdAndDelete(id);
+        // Delete from database - Fixed: Use Ads
+        await Ads.findByIdAndDelete(id);
         
         res.status(200).json({
             message: "Ad deleted successfully"
@@ -174,8 +181,7 @@ const deleteAd = async (req, res) => {
 module.exports = {
     createAds,
     getAllAds,
-    getAdById,
+    getAdById, // Fixed: Export correct function name
     updateAd,
     deleteAd
 };
-
