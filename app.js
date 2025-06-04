@@ -6,6 +6,8 @@ const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 const authRoutes = require("./src/routes/auth");
 const connectDB = require("./src/config/db");
+const addRoutes = require("./src/routes/ads.route");
+const { createAds } = require("./src/controllers/add.controller");
 
 const app = express();
 
@@ -27,6 +29,7 @@ app.get('/',(req,res)=>{
   res.send('You are connected')
 })
 
+app.use("/api/ads", addRoutes);
 // Database connection
 connectDB();
 
