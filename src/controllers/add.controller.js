@@ -30,10 +30,7 @@ const createAds = async (req, res) => {
     res.status(201).json({
       message: "Ad uploaded successfully",
       ad: newAd,
-      cloudinaryData: {
-        public_id: result.public_id,
-        url: result.secure_url,
-      },
+      
     });
   } catch (error) {
     console.error("Error in createAds:", error);
