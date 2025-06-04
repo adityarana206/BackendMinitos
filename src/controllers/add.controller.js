@@ -1,5 +1,4 @@
-// Import the correct Ad model (not Everyday)
-// Make sure this path is correct
+// Import the correct Ad model
 const { cloudinary } = require("../config/cloudinary");
 const Ads = require("../models/ads.model");
 
