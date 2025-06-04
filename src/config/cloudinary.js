@@ -14,7 +14,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'gold_products', // Cloudinary folder name
+        folder: 'Minitos', // Cloudinary folder name
         allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
     },
 });
