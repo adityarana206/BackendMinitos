@@ -1,6 +1,6 @@
 const Item = require('../models/item.model');
 const Category = require('../models/category.model');
-const Subcategory = require('../models/SubCategory.model');
+const Subcategory = require('../models/subCategory.model');
 
 
 const createItem = async (req, res) => {

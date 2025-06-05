@@ -12,11 +12,11 @@ const {
 const router = express.Router();
 
 
-router.post('/',createSubcategory);
-router.get('/', getSubcategories);
-router.get('/:id', getSubcategoryById);
-router.get('/category/:categoryId', getSubcategoriesBycategory);        
-router.put('/:id', updateSubcategory);
-router.delete('/:id', deleteSubcategory);
+router.post('/createSubcategory',createSubcategory);
+router.get('/getSubcategories', getSubcategories);
+router.get('/getSubcategoryById/:id', getSubcategoryById);
+router.get('/getSubcategoriesBycategory/:categoryId', getSubcategoriesBycategory);        
+router.put('/updateSubcategory/:id', updateSubcategory);
+router.delete('/deleteSubcategory/:id', deleteSubcategory);
 
 module.exports = router;

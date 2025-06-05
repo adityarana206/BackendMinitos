@@ -14,9 +14,9 @@ const {
 
 // RESTful routes
 router.post('/categories', createcategory);        // Create
-router.get('/categories', getAllCategories);       // Read all
-router.get('/categories/:id', getcategoryById);    // Read one
-router.put('/categories/:id', updatecategory);     // Update
-router.delete('/categories/:id', deletecategory);  // Delete
+router.get('/getcategories', getAllCategories);       // Read all
+router.get('/getcategories/:id', getcategoryById);    // Read one
+router.put('/updatecategories/:id', updatecategory);     // Update
+router.delete('/deletecategories/:id', deletecategory);  // Delete
 
 module.exports = router;

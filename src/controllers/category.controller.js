@@ -146,7 +146,7 @@ const getcategoryWithSubcategories = async (req, res) => {
     }
 
     // Get subcategories for this category
-    const Subcategory = require("../models/subcategory.model");
+    const Subcategory = require("../models/subCategory.model");
     const subcategories = await Subcategory.find({ category: id })
       .sort({ name: 1 });
 
@@ -243,7 +243,7 @@ const deletecategory = async (req, res) => {
     }
 
     // Optional: Check if category has subcategories
-    const Subcategory = require("../models/subcategory.model");
+    const Subcategory = require("../models/subCategory.model");
     const subcategoryCount = await Subcategory.countDocuments({ category: id });
     
     if (subcategoryCount > 0) {
@@ -284,7 +284,7 @@ const deletecategory = async (req, res) => {
 
 const getCategoriesWithCount = async (req, res) => {
   try {
-    const Subcategory = require("../models/subcategory.model");
+    const Subcategory = require("../models/subCategory.model");
     
     // Get all categories
     const categories = await category.find().sort({ name: 1 });
