@@ -4,45 +4,41 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 require("dotenv").config();
-const authRoutes = require("./src/routes/auth");
+
 const connectDB = require("./src/config/db");
-const createAds = require("./src/routes/ads.route");
-const { createCategory, getAllCategories, getCategoryById, deleteCategory, updateCategory } = require("./src/controllers/category.controller");
+const authRoutes = require("./src/routes/auth");
+const adsRoutes = require("./src/routes/ads.route");
+const categoryRoutes = require("./src/routes/category.routes");
 
 const app = express();
-require("dotenv").config();
-// Security middleware
+
+// Middleware
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-// Rate limiting
+// Rate limiting for auth (like OTP, login)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs
+  max: 5, // limit each IP to 5 requests
   message: "Too many OTP requests, please try again later",
 });
-
 app.use("/api/auth", limiter);
 
+// Health check route
 app.get("/", (req, res) => {
   res.send("You are connected");
 });
 
-app.use("/api", createAds);
-
-app.use("/api",createCategory);
-app.use("/api",getAllCategories);
-app.use("/api",getCategoryById);
-app.use("api",deleteCategory);
-app.use("api",updateCategory);
-
-// Database connection
+// Connect to MongoDB
 connectDB();
 
-// Routes
-app.use("/api/auth", authRoutes);
+// Route registrations
+app.use("/api/auth", authRoutes);       // Authentication routes
+app.use("/api", adsRoutes);             // Ad-related routes
+app.use("/api", categoryRoutes);        // Category routes
 
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
