@@ -7,6 +7,7 @@ require("dotenv").config();
 const authRoutes = require("./src/routes/auth");
 const connectDB = require("./src/config/db");
 const createAds = require("./src/routes/ads.route");
+const { createCategory, getAllCategories, getCategoryById, deleteCategory, updateCategory } = require("./src/controllers/category.controller");
 
 const app = express();
 
@@ -29,6 +30,13 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", createAds);
+
+app.use("/api",createCategory);
+app.use("/api",getAllCategories);
+app.use("/api",getCategoryById);
+app.use("api",deleteCategory);
+app.use("api",updateCategory);
+
 // Database connection
 connectDB();
 
