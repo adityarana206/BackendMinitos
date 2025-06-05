@@ -12,7 +12,6 @@ const {
 } = require('../controllers/category.controller');
 
 
-
 // RESTful routes
 router.post('/categories', createCategory);        // Create
 router.get('/categories', getAllCategories);       // Read all

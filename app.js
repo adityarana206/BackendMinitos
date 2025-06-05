@@ -9,6 +9,8 @@ const connectDB = require("./src/config/db");
 const authRoutes = require("./src/routes/auth");
 const adsRoutes = require("./src/routes/ads.route");
 const categoryRoutes = require("./src/routes/category.routes");
+const subCategoryRoutes = require("./src/routes/subCategory.routes");
+const itemRoutes = require("./src/routes/item.routes");
 
 const app = express();
 
@@ -37,7 +39,8 @@ connectDB();
 app.use("/api/auth", authRoutes);       // Authentication routes
 app.use("/api", adsRoutes);             // Ad-related routes
 app.use("/api", categoryRoutes);        // Category routes
-
+app.use(".api", subCategoryRoutes); // Subcategory routes
+app.use("/api/items", itemRoutes); // Item routes
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
