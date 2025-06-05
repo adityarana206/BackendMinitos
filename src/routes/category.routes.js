@@ -1,4 +1,8 @@
+// routes/subcategory.routes.js
 const express = require('express');
+const router = express.Router();
+
+
 const {
   createCategory,
   getAllCategories,
@@ -7,7 +11,7 @@ const {
   deleteCategory,
 } = require('../controllers/category.controller');
 
-const router = express.Router();
+
 
 // RESTful routes
 router.post('/categories', createCategory);        // Create
