@@ -1,6 +1,6 @@
 
-const Subcategory = require('../models/Sub-Category.model');
-const Category = require('../models/Category.model');
+const Subcategory = require('../models/SubCategory.model');
+const category = require('../models/category.model');
 
 const createSubcategory = async (req, res) => { 
     try {
@@ -9,15 +9,15 @@ const createSubcategory = async (req, res) => {
         // Validate required fields
         if (!name || !category) {
             return res.status(400).json({ 
-                message: "Name and Category ID are required" 
+                message: "Name and category ID are required" 
             });
         }
 
         // Validate if category exists
-        const categoryExists = await Category.findById(category);
+        const categoryExists = await category.findById(category);
         if (!categoryExists) {
             return res.status(400).json({ 
-                message: "Invalid category ID. Category does not exist." 
+                message: "Invalid category ID. category does not exist." 
             });
         }
 
@@ -140,7 +140,7 @@ const getSubcategoryById = async (req, res) => {
     }
 }
 
-const getSubcategoriesByCategory = async (req, res) => {
+const getSubcategoriesBycategory = async (req, res) => {
     try {
         const { categoryId } = req.params;
         
@@ -152,10 +152,10 @@ const getSubcategoriesByCategory = async (req, res) => {
         }
 
         // Validate if category exists
-        const categoryExists = await Category.findById(categoryId);
+        const categoryExists = await category.findById(categoryId);
         if (!categoryExists) {
             return res.status(404).json({ 
-                message: "Category not found" 
+                message: "category not found" 
             });
         }
 
@@ -193,15 +193,15 @@ const updateSubcategory = async (req, res) => {
         // Validate required fields
         if (!name || !category) {
             return res.status(400).json({ 
-                message: "Name and Category ID are required" 
+                message: "Name and category ID are required" 
             });
         }
 
         // Validate if category exists
-        const categoryExists = await Category.findById(category);
+        const categoryExists = await category.findById(category);
         if (!categoryExists) {
             return res.status(400).json({ 
-                message: "Invalid category ID. Category does not exist." 
+                message: "Invalid category ID. category does not exist." 
             });
         }
 
@@ -297,7 +297,7 @@ module.exports = {
     createSubcategory,
     getSubcategories,
     getSubcategoryById,
-    getSubcategoriesByCategory,
+    getSubcategoriesBycategory,
     updateSubcategory,
     deleteSubcategory
 };

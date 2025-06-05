@@ -4,19 +4,19 @@ const router = express.Router();
 
 
 const {
-  createCategory,
+  createcategory,
   getAllCategories,
-  getCategoryById,
-  updateCategory,
-  deleteCategory,
+  getcategoryById,
+  updatecategory,
+  deletecategory
 } = require('../controllers/category.controller');
 
 
 // RESTful routes
-router.post('/categories', createCategory);        // Create
+router.post('/categories', createcategory);        // Create
 router.get('/categories', getAllCategories);       // Read all
-router.get('/categories/:id', getCategoryById);    // Read one
-router.put('/categories/:id', updateCategory);     // Update
-router.delete('/categories/:id', deleteCategory);  // Delete
+router.get('/categories/:id', getcategoryById);    // Read one
+router.put('/categories/:id', updatecategory);     // Update
+router.delete('/categories/:id', deletecategory);  // Delete
 
 module.exports = router;

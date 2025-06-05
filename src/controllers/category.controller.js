@@ -1,6 +1,6 @@
-const Category = require("../models/Category.model");
+const category = require("../models/category.model");
 
-const createCategory = async (req, res) => {
+const createcategory = async (req, res) => {
   try {
     const { name } = req.body;
 
@@ -12,28 +12,28 @@ const createCategory = async (req, res) => {
     }
 
     // Check for duplicate category name
-    const existingCategory = await Category.findOne({ 
+    const existingcategory = await category.findOne({ 
       name: name.trim().toLowerCase() 
     });
     
-    if (existingCategory) {
+    if (existingcategory) {
       return res.status(400).json({
-        message: "Category with this name already exists",
+        message: "category with this name already exists",
       });
     }
 
-    const newCategory = new Category({
+    const newcategory = new category({
       name: name.trim(),
     });
 
-    await newCategory.save();
+    await newcategory.save();
 
     res.status(201).json({
-      message: "Category created successfully",
-      category: newCategory,
+      message: "category created successfully",
+      category: newcategory,
     });
   } catch (error) {
-    console.error("Error in createCategory:", error);
+    console.error("Error in createcategory:", error);
     
     // Handle MongoDB validation errors
     if (error.name === 'ValidationError') {
@@ -46,7 +46,7 @@ const createCategory = async (req, res) => {
     // Handle duplicate key error
     if (error.code === 11000) {
       return res.status(400).json({
-        message: "Category with this name already exists",
+        message: "category with this name already exists",
       });
     }
     
@@ -68,12 +68,12 @@ const getAllCategories = async (req, res) => {
     }
 
     // Get categories with pagination
-    const categories = await Category.find(filter)
+    const categories = await category.find(filter)
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit);
 
-    const total = await Category.countDocuments(filter);
+    const total = await category.countDocuments(filter);
 
     res.status(200).json({
       message: "Categories retrieved successfully",
@@ -94,7 +94,7 @@ const getAllCategories = async (req, res) => {
   }
 };
 
-const getCategoryById = async (req, res) => {
+const getcategoryById = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -105,20 +105,20 @@ const getCategoryById = async (req, res) => {
       });
     }
 
-    const category = await Category.findById(id);
+    const category = await category.findById(id);
 
     if (!category) {
       return res.status(404).json({
-        message: "Category not found",
+        message: "category not found",
       });
     }
 
     res.status(200).json({
-      message: "Category retrieved successfully",
+      message: "category retrieved successfully",
       category: category,
     });
   } catch (error) {
-    console.error("Error in getCategoryById:", error);
+    console.error("Error in getcategoryById:", error);
     res.status(500).json({
       message: "Server Error",
       error: error.message,
@@ -126,7 +126,7 @@ const getCategoryById = async (req, res) => {
   }
 };
 
-const getCategoryWithSubcategories = async (req, res) => {
+const getcategoryWithSubcategories = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -137,11 +137,11 @@ const getCategoryWithSubcategories = async (req, res) => {
       });
     }
 
-    const category = await Category.findById(id);
+    const category = await category.findById(id);
 
     if (!category) {
       return res.status(404).json({
-        message: "Category not found",
+        message: "category not found",
       });
     }
 
@@ -151,7 +151,7 @@ const getCategoryWithSubcategories = async (req, res) => {
       .sort({ name: 1 });
 
     res.status(200).json({
-      message: "Category with subcategories retrieved successfully",
+      message: "category with subcategories retrieved successfully",
       category: {
         ...category.toObject(),
         subcategories: subcategories,
@@ -159,7 +159,7 @@ const getCategoryWithSubcategories = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Error in getCategoryWithSubcategories:", error);
+    console.error("Error in getcategoryWithSubcategories:", error);
     res.status(500).json({
       message: "Server Error",
       error: error.message,
@@ -167,7 +167,7 @@ const getCategoryWithSubcategories = async (req, res) => {
   }
 };
 
-const updateCategory = async (req, res) => {
+const updatecategory = async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
@@ -187,35 +187,35 @@ const updateCategory = async (req, res) => {
     }
 
     // Check for duplicate category name (excluding current category)
-    const existingCategory = await Category.findOne({ 
+    const existingcategory = await category.findOne({ 
       name: name.trim().toLowerCase(),
       _id: { $ne: id }
     });
     
-    if (existingCategory) {
+    if (existingcategory) {
       return res.status(400).json({
-        message: "Category with this name already exists",
+        message: "category with this name already exists",
       });
     }
 
-    const updatedCategory = await Category.findByIdAndUpdate(
+    const updatedcategory = await category.findByIdAndUpdate(
       id,
       { name: name.trim() },
       { new: true, runValidators: true }
     );
 
-    if (!updatedCategory) {
+    if (!updatedcategory) {
       return res.status(404).json({
-        message: "Category not found",
+        message: "category not found",
       });
     }
 
     res.status(200).json({
-      message: "Category updated successfully",
-      category: updatedCategory,
+      message: "category updated successfully",
+      category: updatedcategory,
     });
   } catch (error) {
-    console.error("Error in updateCategory:", error);
+    console.error("Error in updatecategory:", error);
     
     if (error.name === 'ValidationError') {
       return res.status(400).json({
@@ -231,7 +231,7 @@ const updateCategory = async (req, res) => {
   }
 };
 
-const deleteCategory = async (req, res) => {
+const deletecategory = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -261,20 +261,20 @@ const deleteCategory = async (req, res) => {
     //   });
     // }
 
-    const deletedCategory = await Category.findByIdAndDelete(id);
+    const deletedcategory = await category.findByIdAndDelete(id);
 
-    if (!deletedCategory) {
+    if (!deletedcategory) {
       return res.status(404).json({
-        message: "Category not found",
+        message: "category not found",
       });
     }
 
     res.status(200).json({
-      message: "Category deleted successfully",
-      category: deletedCategory,
+      message: "category deleted successfully",
+      category: deletedcategory,
     });
   } catch (error) {
-    console.error("Error in deleteCategory:", error);
+    console.error("Error in deletecategory:", error);
     res.status(500).json({
       message: "Server Error",
       error: error.message,
@@ -287,7 +287,7 @@ const getCategoriesWithCount = async (req, res) => {
     const Subcategory = require("../models/subcategory.model");
     
     // Get all categories
-    const categories = await Category.find().sort({ name: 1 });
+    const categories = await category.find().sort({ name: 1 });
     
     // Get subcategory counts for each category
     const categoriesWithCount = await Promise.all(
@@ -318,11 +318,11 @@ const getCategoriesWithCount = async (req, res) => {
 };
 
 module.exports = {
-  createCategory,
+  createcategory,
   getAllCategories,
-  getCategoryById,
-  getCategoryWithSubcategories,
-  updateCategory,
-  deleteCategory,
+  getcategoryById,
+  getcategoryWithSubcategories,
+  updatecategory,
+  deletecategory,
   getCategoriesWithCount,
 };
