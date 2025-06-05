@@ -10,7 +10,7 @@ const createAds = require("./src/routes/ads.route");
 const { createCategory, getAllCategories, getCategoryById, deleteCategory, updateCategory } = require("./src/controllers/category.controller");
 
 const app = express();
-
+require("dotenv").config();
 // Security middleware
 app.use(helmet());
 app.use(cors());
