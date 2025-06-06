@@ -1,82 +1,83 @@
+const mongoose = require('mongoose');
 const Item = require('../models/item.model');
 const Category = require('../models/category.model');
-const Subcategory = require('../models/subCategory.model');
-
+const Subcategory = require('../models/subCategory.model'); // Make sure this is exporting 'Subcategory'
 
 const createItem = async (req, res) => {
     try {
         const itemData = req.body;
-        
+
         // Validate required fields
         const requiredFields = ['name', 'brand', 'category', 'subcategory'];
         const missingFields = requiredFields.filter(field => !itemData[field]);
-        
+
         if (missingFields.length > 0) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 message: `The following fields are required: ${missingFields.join(', ')}`,
-                missingFields: missingFields
+                missingFields
             });
         }
 
-        // Optional: Validate if category and subcategory exist
-        const categoryExists = await Category.findById(itemData.category);
+        // Validate and fetch category
+        const categoryExists = mongoose.Types.ObjectId.isValid(itemData.category)
+            ? await Category.findById(itemData.category)
+            : await Category.findOne({ name: itemData.category });
+
         if (!categoryExists) {
-            return res.status(400).json({ 
-                message: "Invalid category ID. Category does not exist." 
-            });
+            return res.status(400).json({ message: "Invalid category. No matching category found." });
         }
 
-        const subcategoryExists = await Subcategory.findById(itemData.subcategory);
+        // Validate and fetch subcategory
+        const subcategoryExists = mongoose.Types.ObjectId.isValid(itemData.subcategory)
+            ? await Subcategory.findById(itemData.subcategory)
+            : await Subcategory.findOne({ name: itemData.subcategory });
+
         if (!subcategoryExists) {
-            return res.status(400).json({ 
-                message: "Invalid subcategory ID. Subcategory does not exist." 
-            });
+            return res.status(400).json({ message: "Invalid subcategory. No matching subcategory found." });
         }
 
-        // Optional: Validate if subcategory belongs to the specified category
-        if (subcategoryExists.category.toString() !== itemData.category) {
-            return res.status(400).json({ 
-                message: "Subcategory does not belong to the specified category." 
-            });
-        }
+        // Replace name with ObjectId
+        itemData.category = categoryExists._id;
+        itemData.subcategory = subcategoryExists._id;
 
-        // Create the item
+        // Create and populate item
         const item = await Item.create(itemData);
-        
-        // Populate references for response
         const populatedItem = await Item.findById(item._id)
             .populate('category', 'name')
             .populate('subcategory', 'name');
-        
+
         return res.status(201).json({
             message: "Item created successfully",
             item: populatedItem
         });
-        
+
     } catch (error) {
         console.error("Error creating item:", error);
-        
-        // Handle specific MongoDB errors
+
         if (error.name === 'ValidationError') {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 message: "Validation error",
-                details: error.message 
+                details: error.message
             });
         }
-        
+
         if (error.code === 11000) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 message: "Duplicate entry found",
-                details: error.message 
+                details: error.message
             });
         }
-        
-        return res.status(500).json({ 
+
+        return res.status(500).json({
             message: "Internal server error",
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
-}
+};
+
+
+
+
 
 // Additional CRUD operations for completeness
 const getAllItems = async (req, res) => {

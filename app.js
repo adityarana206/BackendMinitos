@@ -39,7 +39,7 @@ connectDB();
 app.use("/api/auth", authRoutes);       // Authentication routes
 app.use("/api", adsRoutes);             // Ad-related routes
 app.use("/api", categoryRoutes);        // Category routes
-app.use(".api", subCategoryRoutes); // Subcategory routes
+app.use("/api", subCategoryRoutes); // Subcategory routes
 app.use("/api/items", itemRoutes); // Item routes
 // Start server
 const PORT = process.env.PORT || 3000;

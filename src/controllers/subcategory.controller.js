@@ -1,30 +1,42 @@
-
 const Subcategory = require('../models/subCategory.model');
-const category = require('../models/category.model');
+const Category = require('../models/category.model');
+const mongoose = require('mongoose');
 
-const createSubcategory = async (req, res) => { 
+const createSubcategory = async (req, res) => {
     try {
         const { name, category } = req.body;
         
         // Validate required fields
         if (!name || !category) {
             return res.status(400).json({ 
-                message: "Name and category ID are required" 
+                message: "Name and category ID/name are required" 
             });
         }
 
-        // Validate if category exists
-        const categoryExists = await category.findById(category);
+        let categoryExists;
+        
+        // Check if category is a valid ObjectId or a name
+        if (mongoose.Types.ObjectId.isValid(category)) {
+            // If it's a valid ObjectId, search by _id
+            categoryExists = await Category.findById(category);
+        } else {
+            // If it's not a valid ObjectId, search by name
+            categoryExists = await Category.findOne({ name: category });
+        }
+        
         if (!categoryExists) {
             return res.status(400).json({ 
-                message: "Invalid category ID. category does not exist." 
+                message: "Invalid category. Category does not exist." 
             });
         }
+
+        // Use the found category's _id for creating subcategory
+        const categoryId = categoryExists._id;
 
         // Check for duplicate subcategory name within the same category
         const existingSubcategory = await Subcategory.findOne({ 
             name: name.trim(), 
-            category 
+            category: categoryId 
         });
         
         if (existingSubcategory) {
@@ -35,7 +47,7 @@ const createSubcategory = async (req, res) => {
 
         const subcategory = await Subcategory.create({ 
             name: name.trim(), 
-            category 
+            category: categoryId 
         });
 
         // Populate the category for response
@@ -55,6 +67,12 @@ const createSubcategory = async (req, res) => {
             return res.status(400).json({ 
                 message: "Validation error",
                 details: error.message 
+            });
+        }
+        
+        if (error.name === 'CastError') {
+            return res.status(400).json({ 
+                message: "Invalid category ID format" 
             });
         }
         
