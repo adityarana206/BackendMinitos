@@ -16,11 +16,6 @@ const vendorSchema = new mongoose.Schema(
       trim: true,
     },
 
-    password: {
-      type: String,
-      required: true,
-    },
-
     phone: {
       type: String,
       required: true,
@@ -50,11 +45,6 @@ const vendorSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    }
   },
   {
     timestamps: true, // adds createdAt and updatedAt

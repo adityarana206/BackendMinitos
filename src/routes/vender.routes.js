@@ -3,18 +3,18 @@ const router = express.Router();
 const vendorController = require('../controllers/vender.controller');
 
 // Create a new vendor
-router.post('/', vendorController.createVendor);
+router.post('/createVendor', vendorController.createVendor);
 
 // Get all vendors
-router.get('/', vendorController.getAllVendors);
+router.get('/getAllVendors', vendorController.getAllVendors);
 
 // Get a single vendor by ID
-router.get('/:id', vendorController.getVendorById);
+router.get('/getVendorById/:id', vendorController.getVendorById);
 
 // Update a vendor
-router.put('/:id', vendorController.updateVendor);
+router.put('/updateVendor/:id', vendorController.updateVendor);
 
 // Delete a vendor
-router.delete('/:id', vendorController.deleteVendor);
+router.delete('/deleteVendor/:id', vendorController.deleteVendor);
 
 module.exports = router;
