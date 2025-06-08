@@ -144,7 +144,6 @@ const deleteAd = async (req, res) => {
 module.exports = {
   createAds,
   getAllAds,
-  // getAdById,
   updateAd,
   deleteAd,
 };
