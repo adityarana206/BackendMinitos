@@ -114,7 +114,7 @@ exports.getVendorById = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error in getVendorById:', error);
+    console.error('Error in getVendorById at 117 :', error);
 
     res.status(500).json({
       message: 'Server error while retrieving vendor',
