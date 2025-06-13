@@ -111,7 +111,7 @@ const createOrder = async (req, res) => {
     await newOrder.save();
 
     for (const item of cart.items) {
-      await GoldProduct.findByIdAndUpdate(item.productId._id, {
+      await product.findByIdAndUpdate(item.productId._id, {
         isAvailable: false,
       });
     }
@@ -187,7 +187,7 @@ const getOrdersByUser = async (req, res) => {
         path: "cartId",
         populate: {
           path: "items.productId",
-          model: "GoldProduct",
+          model: "product",
         },
       })
       .sort({ createdAt: -1 });
@@ -207,7 +207,7 @@ const getOrderById = async (req, res) => {
       path: "cartId",
       populate: {
         path: "items.productId",
-        model: "GoldProduct",
+        model: "product",
       },
     });
 
@@ -228,7 +228,7 @@ const getAllOrders = async (req, res) => {
         path: "cartId",
         populate: {
           path: "items.productId",
-          model: "GoldProduct",
+          model: "product",
         },
       })
       .sort({ createdAt: -1 });
