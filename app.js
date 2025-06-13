@@ -12,6 +12,8 @@ const categoryRoutes = require("./src/routes/category.routes");
 const subCategoryRoutes = require("./src/routes/subCategory.routes");
 const itemRoutes = require("./src/routes/item.routes");
 const adminRoutes = require("./src/routes/admin.route"); // Admin routes
+const orders = require('./src/routes/order.routes')
+
 
 const app = express();
 
@@ -43,6 +45,7 @@ app.use("/api", categoryRoutes);        // Category routes
 app.use("/api", subCategoryRoutes); // Subcategory routes
 app.use("/api/items", itemRoutes); // Item routes
 app.use("/api/admin",adminRoutes ); // Admin routes
+app.use("/api/orders",orders)   // Order
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
