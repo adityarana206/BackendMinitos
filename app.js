@@ -12,9 +12,8 @@ const categoryRoutes = require("./src/routes/category.routes");
 const subCategoryRoutes = require("./src/routes/subCategory.routes");
 const itemRoutes = require("./src/routes/item.routes");
 const adminRoutes = require("./src/routes/admin.route"); // Admin routes
-const orders = require('./src/routes/order.routes')
-
-
+const orders = require('./src/routes/order.routes');
+const cart = require('./src/routes/cart.routes')
 const app = express();
 
 // Middleware
@@ -45,7 +44,11 @@ app.use("/api", categoryRoutes);        // Category routes
 app.use("/api", subCategoryRoutes); // Subcategory routes
 app.use("/api/items", itemRoutes); // Item routes
 app.use("/api/admin",adminRoutes ); // Admin routes
-app.use("/api/orders",orders)   // Order
+app.use("/api/cart",cart)
+app.use("/api/orders",orders)
+app.use('/api/carts', cartRoutes);
+   // Order
+
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

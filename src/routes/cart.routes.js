@@ -1,17 +1,22 @@
+// routes/cartRoutes.js
 const express = require('express');
 const router = express.Router();
-const cartController = require('../controllers/cartController');
 
-// Get Cart (pass userId in query or body)
-router.get('/', cartController.getCart);
+const {
+  userCart,
+  addToCart,removeToCart,updateQuantity
+} = require('../controllers/cart.controller');
 
-// Add to Cart (pass userId in body)
-router.post('/add', cartController.addToCart);
+// Get user cart
+router.get('/cart', userCart);
 
-// Remove from Cart (pass userId in body)
-router.post('/remove', cartController.removeFromCart);
+// Add to cart
+router.post('/cart/add', addToCart);
 
-// Update Cart (pass userId in body)
-router.post('/update', cartController.updateCart);
+// Remove from cart
+router.post('/cart/remove', removeToCart);
+
+// Update quantity
+router.post('/cart/update', updateQuantity);
 
 module.exports = router;
