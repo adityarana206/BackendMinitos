@@ -1,4 +1,4 @@
-const category = require("../models/category.model");
+const Category = require("../models/Category.model");
 
 const createcategory = async (req, res) => {
   try {
@@ -12,25 +12,25 @@ const createcategory = async (req, res) => {
     }
 
     // Check for duplicate category name
-    const existingcategory = await category.findOne({ 
+    const existingCategory = await Category.findOne({ 
       name: name.trim().toLowerCase() 
     });
     
-    if (existingcategory) {
+    if (existingCategory) {
       return res.status(400).json({
         message: "category with this name already exists",
       });
     }
 
-    const newcategory = new category({
+    const newCategory = new Category({
       name: name.trim(),
     });
 
-    await newcategory.save();
+    await newCategory.save();
 
     res.status(201).json({
       message: "category created successfully",
-      category: newcategory,
+      category: newCategory,
     });
   } catch (error) {
     console.error("Error in createcategory:", error);
@@ -68,16 +68,16 @@ const getAllCategories = async (req, res) => {
     }
 
     // Get categories with pagination
-    const categories = await category.find(filter)
+    const categories = await Category.find(filter)
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit);
 
-    const total = await category.countDocuments(filter);
+    const total = await Category.countDocuments(filter);
 
     res.status(200).json({
       message: "Categories retrieved successfully",
-      categories: categories, // BUG FIX: This was missing in your original code
+      categories: categories,
       count: categories.length,
       pagination: {
         current: parseInt(page),
@@ -105,9 +105,9 @@ const getcategoryById = async (req, res) => {
       });
     }
 
-    const category = await category.findById(id);
+    const foundCategory = await Category.findById(id);
 
-    if (!category) {
+    if (!foundCategory) {
       return res.status(404).json({
         message: "category not found",
       });
@@ -115,7 +115,7 @@ const getcategoryById = async (req, res) => {
 
     res.status(200).json({
       message: "category retrieved successfully",
-      category: category,
+      category: foundCategory,
     });
   } catch (error) {
     console.error("Error in getcategoryById:", error);
@@ -137,9 +137,9 @@ const getcategoryWithSubcategories = async (req, res) => {
       });
     }
 
-    const category = await category.findById(id);
+    const foundCategory = await Category.findById(id);
 
-    if (!category) {
+    if (!foundCategory) {
       return res.status(404).json({
         message: "category not found",
       });
@@ -153,7 +153,7 @@ const getcategoryWithSubcategories = async (req, res) => {
     res.status(200).json({
       message: "category with subcategories retrieved successfully",
       category: {
-        ...category.toObject(),
+        ...foundCategory.toObject(),
         subcategories: subcategories,
         subcategoryCount: subcategories.length
       }
@@ -187,24 +187,24 @@ const updatecategory = async (req, res) => {
     }
 
     // Check for duplicate category name (excluding current category)
-    const existingcategory = await category.findOne({ 
+    const existingCategory = await Category.findOne({ 
       name: name.trim().toLowerCase(),
       _id: { $ne: id }
     });
     
-    if (existingcategory) {
+    if (existingCategory) {
       return res.status(400).json({
         message: "category with this name already exists",
       });
     }
 
-    const updatedcategory = await category.findByIdAndUpdate(
+    const updatedCategory = await Category.findByIdAndUpdate(
       id,
       { name: name.trim() },
       { new: true, runValidators: true }
     );
 
-    if (!updatedcategory) {
+    if (!updatedCategory) {
       return res.status(404).json({
         message: "category not found",
       });
@@ -212,7 +212,7 @@ const updatecategory = async (req, res) => {
 
     res.status(200).json({
       message: "category updated successfully",
-      category: updatedcategory,
+      category: updatedCategory,
     });
   } catch (error) {
     console.error("Error in updatecategory:", error);
@@ -261,9 +261,9 @@ const deletecategory = async (req, res) => {
     //   });
     // }
 
-    const deletedcategory = await category.findByIdAndDelete(id);
+    const deletedCategory = await Category.findByIdAndDelete(id);
 
-    if (!deletedcategory) {
+    if (!deletedCategory) {
       return res.status(404).json({
         message: "category not found",
       });
@@ -271,7 +271,7 @@ const deletecategory = async (req, res) => {
 
     res.status(200).json({
       message: "category deleted successfully",
-      category: deletedcategory,
+      category: deletedCategory,
     });
   } catch (error) {
     console.error("Error in deletecategory:", error);
@@ -287,17 +287,17 @@ const getCategoriesWithCount = async (req, res) => {
     const Subcategory = require("../models/subCategory.model");
     
     // Get all categories
-    const categories = await category.find().sort({ name: 1 });
+    const categories = await Category.find().sort({ name: 1 });
     
     // Get subcategory counts for each category
     const categoriesWithCount = await Promise.all(
-      categories.map(async (category) => {
+      categories.map(async (categoryItem) => {
         const subcategoryCount = await Subcategory.countDocuments({ 
-          category: category._id 
+          category: categoryItem._id 
         });
         
         return {
-          ...category.toObject(),
+          ...categoryItem.toObject(),
           subcategoryCount
         };
       })
