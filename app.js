@@ -6,17 +6,17 @@ const rateLimit = require("express-rate-limit");
 const app = express();
 require("dotenv").config();
 
-const connectDB = require("./src/config/db");
-const authRoutes = require("./src/routes/auth");
-const adsRoutes = require("./src/routes/ads.route");
-const categoryRoutes = require("./src/routes/category.routes");
-const subCategoryRoutes = require("./src/routes/subCategory.routes");
-const itemRoutes = require("./src/routes/item.routes");
-const adminRoutes = require("./src/routes/admin.route"); // Admin routes
+const connectDB = require("./config/db");
+const authRoutes = require("./routes/auth");
+const adsRoutes = require("./routes/ads.route");
+const categoryRoutes = require("./routes/category.routes");
+const subCategoryRoutes = require("./routes/subCategory.routes");
+const itemRoutes = require("./routes/item.routes");
+const adminRoutes = require("./routes/admin.route"); // Admin routes
 //const orders = require("./src/routes/order.routes");
-const cart = require("./src/routes/cart.routes");
-const promotion = require("./src/routes/promo.routes");
-const websiteSettingsRoutes = require("./src/routes/bottom.route");
+const cart = require("./routes/cart.routes");
+const promotion = require("./routes/promo.routes");
+const websiteSettingsRoutes = require("./routes/bottom.route");
 
 
 // Middleware
