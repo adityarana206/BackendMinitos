@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const subcategorySchema = new mongoose.Schema({
+const subCategorySchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Subcategory name is required'],
@@ -13,7 +13,5 @@ const subcategorySchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-// Check if model exists before creating it
-const Subcategory = mongoose.models.Subcategory || mongoose.model('Subcategory', subcategorySchema);
 
-module.exports = Subcategory;
+ module.exports = mongoose.model('subCategpory', subCategorySchema);

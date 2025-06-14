@@ -8,7 +8,7 @@ const {
     getSubcategoriesBycategory,
     updateSubcategory,
     deleteSubcategory
-} = require('../controllers/subcategory.controller');
+} = require('../controllers/subCategory.controller');
 const router = express.Router();
 
 
