@@ -1,6 +1,6 @@
 // controllers/websiteSettingsController.js
 
-const WebsiteSettings = require('../models/WebsiteSettings');
+const WebsiteSettings = require('../models/bottombar.model');
 
 // Get Website Settings
  const getWebsiteSettings = async (req, res) => {
