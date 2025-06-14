@@ -38,7 +38,7 @@ const productSchema = new mongoose.Schema({
 
   subcategory: {
   type: mongoose.Schema.Types.ObjectId,
-  ref: 'Subcategory', // ✅ Matches model name exactly
+  ref: 'subCat', // ✅ Matches model name exactly
   required: true,
 },
 

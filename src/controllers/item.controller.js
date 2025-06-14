@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Item = require('../models/item.model');
 const Category = require('../models/Category.model');
-const Subcategory = require('../models/subCategory.model'); // Make sure this is exporting 'Subcategory'
+const Subcategory = require('../models/subCat.model'); // Make sure this is exporting 'Subcategory'
 
 const createItem = async (req, res) => {
     try {
