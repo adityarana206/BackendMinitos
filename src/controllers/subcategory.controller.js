@@ -1,7 +1,20 @@
-// Fixed subcategory.controller.js
+const mongoose = require('mongoose'); // Add missing import
 const Subcategory = require("../models/subCategory.model");
-const Category = require("../models/Category.model"); // ✅ Fixed: Import Category model
-const mongoose = require("mongoose");
+const Category = require("../models/Category.model");
+
+// Helper function for consistent ObjectId validation
+const isValidObjectId = (id) => {
+  return mongoose.Types.ObjectId.isValid(id);
+};
+
+// Helper function to find category by ID or name
+const findCategory = async (categoryInput) => {
+  if (isValidObjectId(categoryInput)) {
+    return await Category.findById(categoryInput);
+  } else {
+    return await Category.findOne({ name: categoryInput });
+  }
+};
 
 const createSubcategory = async (req, res) => {
   try {
@@ -14,16 +27,8 @@ const createSubcategory = async (req, res) => {
       });
     }
 
-    let categoryExists;
-
-    // Check if category is a valid ObjectId or a name
-    if (mongoose.Types.ObjectId.isValid(category)) {
-      // If it's a valid ObjectId, search by _id
-      categoryExists = await Category.findById(category);
-    } else {
-      // If it's not a valid ObjectId, search by name
-      categoryExists = await Category.findOne({ name: category });
-    }
+    // Find category by ID or name
+    const categoryExists = await findCategory(category);
 
     if (!categoryExists) {
       return res.status(400).json({
@@ -96,14 +101,31 @@ const getSubcategories = async (req, res) => {
     // Build filter object
     const filter = {};
     if (category) {
-      filter.category = category;
+      // Handle both ObjectId and category name
+      if (isValidObjectId(category)) {
+        filter.category = category;
+      } else {
+        // Find category by name first
+        const categoryDoc = await Category.findOne({ name: category });
+        if (categoryDoc) {
+          filter.category = categoryDoc._id;
+        } else {
+          return res.status(400).json({
+            message: "Category not found",
+          });
+        }
+      }
     }
+
+    // Convert limit to number and set reasonable bounds
+    const limitNum = Math.min(Math.max(parseInt(limit), 1), 100);
+    const pageNum = Math.max(parseInt(page), 1);
 
     // Get subcategories with pagination
     const subcategories = await Subcategory.find(filter)
       .populate("category", "name")
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .limit(limitNum)
+      .skip((pageNum - 1) * limitNum)
       .sort({ name: 1 }); // Sort alphabetically
 
     const total = await Subcategory.countDocuments(filter);
@@ -112,8 +134,8 @@ const getSubcategories = async (req, res) => {
       message: "Subcategories retrieved successfully",
       subcategories,
       pagination: {
-        current: parseInt(page),
-        pages: Math.ceil(total / limit),
+        current: pageNum,
+        pages: Math.ceil(total / limitNum),
         total,
       },
     });
@@ -130,7 +152,7 @@ const getSubcategoryById = async (req, res) => {
     const { id } = req.params;
 
     // Validate ObjectId format
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!isValidObjectId(id)) {
       return res.status(400).json({
         message: "Invalid subcategory ID format",
       });
@@ -159,12 +181,12 @@ const getSubcategoryById = async (req, res) => {
   }
 };
 
-const getSubcategoriesBycategory = async (req, res) => {
+const getSubcategoriesByCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
 
     // Validate ObjectId format
-    if (!categoryId.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!isValidObjectId(categoryId)) {
       return res.status(400).json({
         message: "Invalid category ID format",
       });
@@ -202,7 +224,7 @@ const updateSubcategory = async (req, res) => {
     const { name, category } = req.body;
 
     // Validate ObjectId format
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!isValidObjectId(id)) {
       return res.status(400).json({
         message: "Invalid subcategory ID format",
       });
@@ -211,22 +233,24 @@ const updateSubcategory = async (req, res) => {
     // Validate required fields
     if (!name || !category) {
       return res.status(400).json({
-        message: "Name and category ID are required",
+        message: "Name and category ID/name are required",
       });
     }
 
-    // Validate if category exists
-    const categoryExists = await Category.findById(category);
+    // Find category by ID or name (consistent with create function)
+    const categoryExists = await findCategory(category);
     if (!categoryExists) {
       return res.status(400).json({
-        message: "Invalid category ID. Category does not exist.",
+        message: "Invalid category. Category does not exist.",
       });
     }
+
+    const categoryId = categoryExists._id;
 
     // Check for duplicate subcategory name within the same category (excluding current subcategory)
     const existingSubcategory = await Subcategory.findOne({
       name: name.trim(),
-      category,
+      category: categoryId,
       _id: { $ne: id }, // Exclude current subcategory
     });
 
@@ -238,7 +262,7 @@ const updateSubcategory = async (req, res) => {
 
     const subcategory = await Subcategory.findByIdAndUpdate(
       id,
-      { name: name.trim(), category },
+      { name: name.trim(), category: categoryId },
       { new: true, runValidators: true }
     ).populate("category", "name");
 
@@ -273,7 +297,7 @@ const deleteSubcategory = async (req, res) => {
     const { id } = req.params;
 
     // Validate ObjectId format
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+    if (!isValidObjectId(id)) {
       return res.status(400).json({
         message: "Invalid subcategory ID format",
       });
@@ -315,7 +339,7 @@ module.exports = {
   createSubcategory,
   getSubcategories,
   getSubcategoryById,
-  getSubcategoriesBycategory,
+  getSubcategoriesByCategory, // Fixed typo in function name
   updateSubcategory,
   deleteSubcategory,
 };
