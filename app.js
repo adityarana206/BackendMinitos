@@ -13,7 +13,7 @@ const categoryRoutes = require("./src/routes/category.routes");
 const subCategoryRoutes = require("./src/routes/subCategory.routes");
 const itemRoutes = require("./src/routes/item.routes");
 const adminRoutes = require("./src/routes/admin.route"); // Admin routes
-const orders = require("./src/routes/order.routes");
+//const orders = require("./src/routes/order.routes");
 const cart = require("./src/routes/cart.routes");
 const promotion = require("./src/routes/promo.routes");
 const websiteSettingsRoutes = require("./src/routes/bottom.route");
@@ -48,7 +48,7 @@ app.use("/api", subCategoryRoutes); // Subcategory routes
 app.use("/api/items", itemRoutes); // Item routes
 app.use("/api/admin", adminRoutes); // Admin routes
 app.use("/api/cart", cart); //cart
-app.use("/api/orders", orders); // Order
+//app.use("/api/orders", orders); // Order
 app.use("/api/promo", promotion); // Promotion
 app.use('/api/website-settings', websiteSettingsRoutes); // BottomBar
 
