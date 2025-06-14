@@ -9,4 +9,7 @@ const categorySchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Category', categorySchema);
+// Check if model exists before creating it
+const Category = mongoose.models.Category || mongoose.model('Category', categorySchema);
+
+module.exports = Category;

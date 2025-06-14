@@ -1,5 +1,6 @@
+// Fixed subcategory.controller.js
 const Subcategory = require("../models/subCategory.model");
-const Category = require("../models/category.model")
+const Category = require("../models/Category.model"); // ✅ Fixed: Import Category model
 const mongoose = require("mongoose");
 
 const createSubcategory = async (req, res) => {
@@ -170,10 +171,10 @@ const getSubcategoriesBycategory = async (req, res) => {
     }
 
     // Validate if category exists
-    const categoryExists = await category.findById(categoryId);
+    const categoryExists = await Category.findById(categoryId);
     if (!categoryExists) {
       return res.status(404).json({
-        message: "category not found",
+        message: "Category not found",
       });
     }
 
@@ -215,10 +216,10 @@ const updateSubcategory = async (req, res) => {
     }
 
     // Validate if category exists
-    const categoryExists = await category.findById(category);
+    const categoryExists = await Category.findById(category);
     if (!categoryExists) {
       return res.status(400).json({
-        message: "Invalid category ID. category does not exist.",
+        message: "Invalid category ID. Category does not exist.",
       });
     }
 
