@@ -1,6 +1,6 @@
 // controllers/cartController.js
-const { model } = require("mongoose");
-const Cart = require("../models/Cart");
+
+const Cart = require("../models/Cart.model");
 
 // Get User Cart
 const userCart = async (req, res) => {
@@ -108,6 +108,6 @@ const updateQuantity = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
-
-  model.exports = { userCart,updateQuantity, addToCart, removeToCart };
 };
+
+module.exports = { userCart, addToCart, removeToCart, updateQuantity };

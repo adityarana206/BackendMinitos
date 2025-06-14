@@ -1,82 +1,82 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema({
-  productId:{
-    type:String,
-    required:true
-  },
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  brand: {
-    type: String,
-    required: true,
-  },
-  description: String,
+// const productSchema = new mongoose.Schema({
+//   productId:{
+//     type:String,
+//     required:true
+//   },
+//   name: {
+//     type: String,
+//     required: true,
+//     trim: true,
+//   },
+//   brand: {
+//     type: String,
+//     required: true,
+//   },
+//   description: String,
 
-  images: [
-    {
-      url: { type: String, required: true },
-      alt: { type: String },
-    }
-  ],
+//   images: [
+//     {
+//       url: { type: String, required: true },
+//       alt: { type: String },
+//     }
+//   ],
 
-  price: {
-    mrp: { type: Number, required: true },
-    sellingPrice: { type: Number, required: true },
-    discountPercent: { type: Number, default: 0 },
-  },
+//   price: {
+//     mrp: { type: Number, required: true },
+//     sellingPrice: { type: Number, required: true },
+//     discountPercent: { type: Number, default: 0 },
+//   },
 
-  unit: {
-    quantity: { type: Number, required: true },
-    unitType: { type: String, enum: ['g', 'kg', 'ml', 'l', 'pack', 'pcs'], required: true },
-  },
+//   unit: {
+//     quantity: { type: Number, required: true },
+//     unitType: { type: String, enum: ['g', 'kg', 'ml', 'l', 'pack', 'pcs'], required: true },
+//   },
 
-  category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    required: true,
-  },
+//   category: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: 'Category',
+//     required: true,
+//   },
 
-  subcategory: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'SubCategory',
-    required: true,
-  },
+//   subcategory: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: 'SubCategory',
+//     required: true,
+//   },
 
-  stock: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
+//   stock: {
+//     type: Number,
+//     required: true,
+//     default: 0,
+//   },
 
-  isAvailable: {
-    type: Boolean,
-    default: true,
-  },
+//   isAvailable: {
+//     type: Boolean,
+//     default: true,
+//   },
 
-  tags: [String],
+//   tags: [String],
 
-  expiryDate: Date,
+//   expiryDate: Date,
 
-  warehouseLocation: String,
+//   warehouseLocation: String,
 
-  deliveryTimeEstimate: {
-    type: String, // Example: "10 mins"
-  },
+//   deliveryTimeEstimate: {
+//     type: String, // Example: "10 mins"
+//   },
 
-  rating: {
-    average: { type: Number, default: 0 },
-    totalReviews: { type: Number, default: 0 },
-  },
+//   rating: {
+//     average: { type: Number, default: 0 },
+//     totalReviews: { type: Number, default: 0 },
+//   },
 
-  vendor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Vendor', // If vendors are managed separately
-  },
+//   vendor: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: 'Vendor', // If vendors are managed separately
+//   },
 
-}, { timestamps: true });
+// }, { timestamps: true });
 
-module.exports = mongoose.model('Product', productSchema);
+// module.exports = mongoose.model('Product', productSchema);

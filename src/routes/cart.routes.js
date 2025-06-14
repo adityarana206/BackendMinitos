@@ -2,10 +2,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {
-  userCart,
-  addToCart,removeToCart,updateQuantity
-} = require('../controllers/cart.controller');
+const { userCart, addToCart, removeToCart, updateQuantity } = require('../controllers/cart.controller');
 
 // Get user cart
 router.get('/cart', userCart);
