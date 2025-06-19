@@ -82,23 +82,29 @@ const createItem = async (req, res) => {
 // Additional CRUD operations for completeness
 const getAllItems = async (req, res) => {
     try {
-        const { page = 1, limit = 10, category, subcategory, brand } = req.query;
-        
+        let { page = 1, limit = 10, category, subcategory, brand } = req.query;
+
+        // Convert page and limit to numbers
+        page = parseInt(page);
+        limit = parseInt(limit);
+
         // Build filter object
         const filter = {};
         if (category) filter.category = category;
         if (subcategory) filter.subcategory = subcategory;
         if (brand) filter.brand = new RegExp(brand, 'i'); // Case-insensitive search
-        
+
+        // Fetch items with filters, pagination, and sorting
         const items = await Item.find(filter)
             .populate('category', 'name')
             .populate('subcategory', 'name')
-            .limit(limit * 1)
+            .limit(limit)
             .skip((page - 1) * limit)
             .sort({ createdAt: -1 });
-            
+
+        // Count total documents matching the filter
         const total = await Item.countDocuments(filter);
-        
+
         return res.status(200).json({
             message: "Items retrieved successfully",
             items,
@@ -108,7 +114,7 @@ const getAllItems = async (req, res) => {
                 total
             }
         });
-        
+
     } catch (error) {
         console.error("Error fetching items:", error);
         return res.status(500).json({ message: "Internal server error" });
