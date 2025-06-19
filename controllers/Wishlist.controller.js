@@ -1,8 +1,9 @@
 // controllers/wishlistController.js
-const Wishlist = require('../models/Wishlist');
+const { get } = require('mongoose');
+const Wishlist = require('../models/Wishlist.model');
 
 // Get Wishlist
-exports.getWishlist = async (req, res) => {
+const getWishlist = async (req, res) => {
     const userId = req.query.userId;
 
     if (!userId) return res.status(400).json({ message: 'userId is required' });
@@ -19,7 +20,7 @@ exports.getWishlist = async (req, res) => {
 };
 
 // Add to Wishlist
-exports.addToWishlist = async (req, res) => {
+const addToWishlist = async (req, res) => {
     const { userId, productId } = req.body;
 
     if (!userId || !productId) return res.status(400).json({ message: 'userId and productId are required' });
@@ -45,7 +46,7 @@ exports.addToWishlist = async (req, res) => {
 };
 
 // Remove from Wishlist
-exports.removeFromWishlist = async (req, res) => {
+ const removeFromWishlist = async (req, res) => {
     const { userId, productId } = req.body;
 
     if (!userId || !productId) return res.status(400).json({ message: 'userId and productId are required' });
@@ -63,3 +64,9 @@ exports.removeFromWishlist = async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
+module.exports={
+    removeFromWishlist,
+    getWishlist,
+    addToWishlist
+}

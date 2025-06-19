@@ -19,7 +19,7 @@ const createPromotion = async (req, res) => {
       !startDate ||
       !endDate ||
       !applicableProducts ||
-      isActive
+      isActive===undefined
     ) {
       return res.status(400).json({
         message: "Promotion Detail are required",
@@ -51,38 +51,41 @@ const createPromotion = async (req, res) => {
   }
 };
 
-const updatePromotiom = async (req, res) => {
+const updatePromotion = async (req, res) => {
   try {
-    const { title } = req.params;
-    const { isActive } = req.body;
+    
+    const { title,isActive } = req.body;
 
-    if (!title || !isActive) {
-      return res.status(400).json({ message: "All field are required" });
+    // Validate required fields
+    if (!title || isActive === undefined) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    const promotion = await updatePromotiom.findOneAndUpdate(
+    // Find and update the promotion
+    const promotion = await PromoCodeModel.findOneAndUpdate(
       { title },
-      {
-        isActive,
-      },
+      { isActive },
       { new: true, runValidators: true }
     );
 
-    if (!title) {
-      return res.status(404).json({ message: "Promotion Detail Not Found" });
+    // Check if promotion exists
+    if (!promotion) {
+      return res.status(404).json({ message: "Promotion not found" });
     }
 
     res.status(200).json({
-      message:"Pormotion details updated successfully",
-      promotion
+      message: "Promotion details updated successfully",
+      promotion,
     });
-
-  } catch (error) { console.error("Error in Promtion", error);
+  } catch (error) {
+    console.error("Error in updating promotion:", error);
     res.status(500).json({
       message: "Server Error",
       error: error.message,
-    });}
+    });
+  }
 };
+
 module.exports={
-  createPromotion,updatePromotiom
+  createPromotion,updatePromotion
 }

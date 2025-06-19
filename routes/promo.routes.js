@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router();
-const {createPromotion,updatePromotiom}= require('../controllers/promo.controller');
+const {createPromotion,updatePromotion}= require('../controllers/promo.controller');
 
-router.post('/promo',createPromotion);
-router.put('/updatepromo',updatePromotiom)
+router.post('/createpromo',createPromotion);
+router.put('/updatepromo',updatePromotion)
 
 module.exports = router;
 

@@ -3,12 +3,12 @@ const { createAds, updateAd, deleteAd, getAllAds } = require('../controllers/add
 const router = express.Router();
 
 
-router.post('/ads', createAds);
+router.post('/createads', createAds);
 
 
-router.get('/ads', getAllAds);
+router.get('/getallads', getAllAds);
 
-router.put('/ads/:id', updateAd);
-router.delete('/ads/:id', deleteAd);
+router.put('/updateads/:id', updateAd);
+router.delete('/deleteads/:id', deleteAd);
 
 module.exports = router;
