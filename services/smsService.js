@@ -1,40 +1,91 @@
 const twilio = require('twilio');
 
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
 class SMSService {
-  static async sendOTP(phoneNumber, otp) {
+  constructor() {
+    this.client = twilio(
+      process.env.TWILIO_ACCOUNT_SID,
+      process.env.TWILIO_AUTH_TOKEN
+    );
+  }
+
+  async sendOTP(phoneNumber, otp) {
+    const message = `Your MINUTOS verification code is: ${otp}. Valid for 5 minutes. Do not share this code.`;
+    return this.sendMessage(phoneNumber, message);
+  }
+
+  async sendWelcomeMessage(phoneNumber, name = '') {
+    const message = name 
+      ? `Welcome to MINUTOS, ${name}! Start exploring fresh groceries delivered to your doorstep. Happy shopping! 🛒`
+      : `Welcome to MINUTOS! Start exploring fresh groceries delivered to your doorstep. Happy shopping! 🛒`;
+    
+    return this.sendMessage(phoneNumber, message);
+  }
+
+  async sendMessage(phoneNumber, message) {
     try {
-      const message = await client.messages.create({
-        body: `Your verification code is: ${otp}. Valid for 5 minutes.`,
+      // Format phone number to international format
+      const formattedNumber = this.formatPhoneNumber(phoneNumber);
+      
+      console.log('📱 Sending SMS:');
+      console.log('  From:', process.env.TWILIO_PHONE_NUMBER);
+      console.log('  To:', formattedNumber);
+      console.log('  Message:', message.substring(0, 50) + '...');
+      
+      const result = await this.client.messages.create({
+        body: message,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to: phoneNumber
+        to: formattedNumber
       });
-      return { success: true, messageId: message.sid };
+
+      console.log(`✅ SMS sent successfully to ${this.sanitizePhoneNumber(formattedNumber)}`);
+      
+      return {
+        success: true,
+        messageId: result.sid,
+        status: result.status
+      };
+
     } catch (error) {
-      console.error('SMS Error:', error);
-      return { success: false, error: error.message };
+      console.error('❌ SMS sending error:');
+      console.error('  Error code:', error.code);
+      console.error('  Error message:', error.message);
+      console.error('  More info:', error.moreInfo);
+      console.error('  Full error:', error);
+      
+      return {
+        success: false,
+        error: error.message,
+        code: error.code
+      };
     }
   }
 
-  static formatPhoneNumber(phoneNumber) {
+  formatPhoneNumber(phoneNumber) {
     // Remove all non-digit characters
     const cleaned = phoneNumber.replace(/\D/g, '');
     
-    // Add country code if missing (assuming US +1)
+    // If it's a 10-digit Indian number, add +91
     if (cleaned.length === 10) {
-      return `+1${cleaned}`;
+      return `+91${cleaned}`;
     }
     
-    if (!cleaned.startsWith('1') && cleaned.length === 11) {
+    // If it already has country code, add + if missing
+    if (cleaned.length > 10 && !phoneNumber.startsWith('+')) {
       return `+${cleaned}`;
     }
     
-    return `+${cleaned}`;
+    return phoneNumber;
+  }
+
+  sanitizePhoneNumber(phoneNumber) {
+    if (!phoneNumber || phoneNumber.length < 4) return '****';
+    
+    const cleaned = phoneNumber.replace(/\D/g, '');
+    const lastFour = cleaned.slice(-4);
+    const hidden = '*'.repeat(Math.max(0, cleaned.length - 4));
+    
+    return `+${hidden}${lastFour}`;
   }
 }
 
-module.exports = SMSService;
+module.exports = new SMSService();
