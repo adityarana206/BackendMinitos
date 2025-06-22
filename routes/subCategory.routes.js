@@ -3,7 +3,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const {createSubcategory,getSubcategories,getSubcategoryById,updateSubcategory,deleteSubcategory} = require('../controllers/subCat.controller')
+const {createSubcategory,getSubcategories,getSubcategoryById,updateSubcategory,deleteSubcategory} = require('../controllers/subCategory.controller')
 
 
 router.post('/createSubcategory',createSubcategory);

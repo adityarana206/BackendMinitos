@@ -1,5 +1,5 @@
 const mongoose = require('mongoose'); // Add missing import
-const Subcategory = require("../models/subCat.model")
+const Subcategory = require("../models/subCategory.model")
 const Category = require("../models/Category.model");
 
 // Helper function for consistent ObjectId validation
