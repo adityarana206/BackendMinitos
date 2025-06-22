@@ -1,6 +1,4 @@
-const Admin = require("../models/admin.model");
-
-const bcrypt = require("bcrypt");
+const admin = require("../models/admin.model");
 
 const createAdmin = async (req, res) => {
   try {
@@ -10,46 +8,32 @@ const createAdmin = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Normalize email to lowercase
-    const normalizedEmail = email.toLowerCase();
-
-    // Check if admin already exists
-    const existingAdmin = await Admin.findOne({ email: normalizedEmail });
+    const existingAdmin = await admin.findOne({ email });
     if (existingAdmin) {
-      return res.status(409).json({ message: "Admin already exists" });
+      return res.status(400).json({ message: "Admin already exists" });
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newAdmin = new Admin({
+    const newAdmin = new admin({
       name,
-      email: normalizedEmail,
+      email,
       phone,
-      password: hashedPassword,
+      password, // Note: Password should be hashed before saving in production
     });
 
     await newAdmin.save();
 
-    return res.status(201).json({
+    res.status(201).json({
       message: "Admin created successfully",
-      admin: {
-        id: newAdmin._id,
-        name: newAdmin.name,
-        email: newAdmin.email,
-        phone: newAdmin.phone,
-      },
+      admin: newAdmin,
     });
   } catch (error) {
-    console.error("Error in createAdmin:", error);
-    return res.status(500).json({
+    console.error("Error in createvendor:", error);
+    res.status(500).json({
       message: "Server Error",
       error: error.message,
     });
   }
 };
-
-
 
 module.exports = {
   createAdmin,
