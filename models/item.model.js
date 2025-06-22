@@ -69,10 +69,10 @@ const productSchema = new mongoose.Schema({
     totalReviews: { type: Number, default: 0 },
   },
 
-  // vendor: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'Vendor', // If vendors are managed separately
-  // },
+  vendor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Vendor', // If vendors are managed separately
+  },
 
 }, { timestamps: true });
 
