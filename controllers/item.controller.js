@@ -8,7 +8,7 @@ const createItem = async (req, res) => {
         const itemData = req.body;
 
         // Validate required fields
-        const requiredFields = ['name', 'brand', 'category', 'subcategory'];
+        const requiredFields = ['productNo','name', 'brand', 'category', 'subcategory'];
         const missingFields = requiredFields.filter(field => !itemData[field]);
 
         if (missingFields.length > 0) {
@@ -44,7 +44,7 @@ const createItem = async (req, res) => {
         const item = await Item.create(itemData);
         const populatedItem = await Item.findById(item._id)
             .populate('category', 'name')
-            .populate('subcategory', 'name');
+            .populate('subcategory', 'name');ç
 
         return res.status(201).json({
             message: "Item created successfully",
