@@ -17,6 +17,7 @@ const adminRoutes = require("./routes/admin.route"); // Admin routes
 const cart = require("./routes/cart.routes");
 const promotion = require("./routes/promo.routes");
 const websiteSettingsRoutes = require("./routes/bottom.route");
+const vendor = require('./routes/vender.routes')
 
 
 // Middleware
@@ -51,6 +52,7 @@ app.use("/api/cart", cart); //cart
 //app.use("/api/orders", orders); // Order
 app.use("/api/promo", promotion); // Promotion
 app.use('/api/website-settings', websiteSettingsRoutes); // BottomBar
+app.use('/api/vendor',vendor) // Vendor
 
 // Start server
 const PORT = process.env.PORT || 3000;
